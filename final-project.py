@@ -5,14 +5,14 @@ import random
 WIDTH = 600
 HEIGHT = 850
 ENEMY_VEL = 20
-LIVES = 1
-TITLE = "mushroom smush"
+LIVES = 3
+TITLE = "Mario Dodge"
 
 # Create a background class
 class Background(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("./images/background.jpg")
+        self.image = pygame.image.load("./Images/background.jpg")
         self.image = pygame.transform.scale(self.image, (WIDTH, HEIGHT))
         self.rect = self.image.get_rect()
 
@@ -20,7 +20,7 @@ class Background(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("./images/mario-new.png")
+        self.image = pygame.image.load("./Images/mario-new.png")
         self.image = pygame.transform.scale(self.image, (54, 75))
         self.rect = self.image.get_rect()
 
@@ -39,13 +39,13 @@ class Player(pygame.sprite.Sprite):
     # Move left function
     def go_left(self):
         self.vel_x = -10
-        self.image = pygame.image.load("./images/toad_flipped.png")
+        self.image = pygame.image.load("./Images/mario-new.png")
         self.image = pygame.transform.scale(self.image, (54, 75))
 
     # Move right function
     def go_right(self):
         self.vel_x = 10
-        self.image = pygame.image.load("./images/toad.png")
+        self.image = pygame.image.load("./Images/mario-new.png")
         self.image = pygame.transform.scale(self.image, (54, 75))
 
     # Stop function
@@ -56,7 +56,7 @@ class Player(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("./images/thwomp.png")
+        self.image = pygame.image.load("./Images/thwomp.webp")
         self.image = pygame.transform.scale(self.image, (107, 120))
         self.rect = self.image.get_rect()
 
@@ -88,7 +88,7 @@ def main():
 
     # Score
     score_value = 0
-    font = pygame.font.Font('freesansbold.ttf', 32)
+    font = pygame.font.Font('Didot.ttf', 32)
     text_score_x = 10
     text_score_y = 10
 
@@ -97,8 +97,8 @@ def main():
         screen.blit(score, (x, y))
 
     # Lives
-    lives_value = 1
-    font = pygame.font.Font('freesansbold.ttf', 32)
+    lives_value = 3
+    font = pygame.font.Font('Didot', 32)
     text_lives_x = 10
     text_lives_y = 40
 
@@ -118,13 +118,6 @@ def main():
     # Background creation
     bg = Background()
     background_group.add(bg)
-
-    # Background music
-    pygame.mixer.music.load("./assets/bgm.mp3")
-    pygame.mixer.music.play(-1)
-
-    # Death music
-    dead_sound = pygame.mixer.Sound("./assets/dead.mp3")
 
     # ----- MAIN LOOP
     while not done:
@@ -184,10 +177,6 @@ def main():
         if lives_value <= 0:
             game_over = True
             player.vel_x = 0
-            # Play squish sound
-            if not play_dead_sound:
-                pygame.mixer.Sound.play(dead_sound)
-                play_dead_sound = True
             # Stop enemy sounds
             for enemy in enemy_group:
                 enemy.kill()
