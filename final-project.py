@@ -5,14 +5,14 @@ import random
 WIDTH = 600
 HEIGHT = 850
 ENEMY_VEL = 20
-LIVES = 3
+LIVES = 1
 TITLE = "Mario Dodge"
 
 # Create a background class
 class Background(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("./Images/background.jpg")
+        self.image = pygame.image.load("./Images/background.jpeg")
         self.image = pygame.transform.scale(self.image, (WIDTH, HEIGHT))
         self.rect = self.image.get_rect()
 
@@ -26,6 +26,7 @@ class Player(pygame.sprite.Sprite):
 
         # Initialize velocity
         self.vel_x = 0
+        self.vel_y = 0
 
         # Spawn player at the bottom of the screen
         self.rect.bottom = HEIGHT - 75
@@ -33,20 +34,40 @@ class Player(pygame.sprite.Sprite):
 
     # Update player
     def update(self):
+        self.calc_grav()
         # Moves left and right
         self.rect.x += self.vel_x
+        self.rect.y += self.vel_y
+
+        if self.rect.bottom > HEIGHT:
+            self.vel_y = 0
+            self.rect.bottom = HEIGHT
+
+    def calc_grav(self):
+        if self.vel_y == 0:
+            self.vel_y = 1
+        else:
+            self.vel_y += 0.35
+
+
 
     # Move left function
     def go_left(self):
-        self.vel_x = -10
+        self.vel_x = -5
         self.image = pygame.image.load("./Images/mario-new.png")
         self.image = pygame.transform.scale(self.image, (54, 75))
 
     # Move right function
     def go_right(self):
-        self.vel_x = 10
+        self.vel_x = 5
         self.image = pygame.image.load("./Images/mario-new.png")
         self.image = pygame.transform.scale(self.image, (54, 75))
+
+    # Move up function
+    def go_up(self):
+        self.vel_y = -10
+        self.image = pygame.transform.scale(self.image, (54, 75))
+        print(self.vel_y)
 
     # Stop function
     def stop(self):
@@ -88,7 +109,8 @@ def main():
 
     # Score
     score_value = 0
-    font = pygame.font.Font('Didot.ttf', 32)
+    font = pygame.font.SysFont('Didot', 32)
+
     text_score_x = 10
     text_score_y = 10
 
@@ -97,8 +119,7 @@ def main():
         screen.blit(score, (x, y))
 
     # Lives
-    lives_value = 3
-    font = pygame.font.Font('Didot', 32)
+    lives_value = 1
     text_lives_x = 10
     text_lives_y = 40
 
@@ -128,16 +149,20 @@ def main():
 
             # Move player if user presses down on left/right arrow keys
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RIGHT:
+                if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     player.go_right()
-                if event.key == pygame.K_LEFT:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     player.go_left()
+                if event.key == pygame.K_UP or event.key == pygame.K_w:
+                    player.go_up()
 
             # Stop player if arrow key is released
             if event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT and player.vel_x < 0:
+                if (event.key == pygame.K_LEFT or event.key == pygame.K_a) and player.vel_x < 0:
                     player.stop()
-                if event.key == pygame.K_RIGHT and player.vel_x > 0:
+                if (event.key == pygame.K_RIGHT or event.key == pygame.K_d) and player.vel_x > 0:
+                    player.stop()
+                if (event.key == pygame.K_UP or event.key == pygame.K_w) and player.vel_y > 0:
                     player.stop()
 
         # Restrict player to stay on screen
