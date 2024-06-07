@@ -48,8 +48,7 @@ class Player(pygame.sprite.Sprite):
             self.vel_y = 1
         else:
             self.vel_y += 0.35
-
-
+            
 
     # Move left function
     def go_left(self):
